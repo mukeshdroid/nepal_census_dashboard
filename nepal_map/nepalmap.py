@@ -7,52 +7,19 @@ from urllib.request import urlopen
 import json
 from copy import deepcopy
 from plotly.subplots import make_subplots
-
+import numpy as np
+import geopandas as gpd
+import folium
+import matplotlib.pyplot as plt
 import os
 
 
 #####################################################################################################################
 ### LOADING FILES
 
-@st.cache
 
-# LOAD DATAFRAME FUNCTION
-def load_data(path):
-    df = pd.read_csv(path)
-    return df
+#read in once
+df_places = gpd.read_file('data/nepal-with-districts.geojson')
 
-# LOAD GEIJASON FILE
-with open("data/district.geojson") as response:
-    geo = json.load(response)
+df_places.explore()
 
-
-
-
-# Add title and header
-# st.title("Renewable Energy Production in Switzerland")
-# st.header("Energy Production by Cantons (MWH) ")
-
-# Geographic Map
-fig = go.Figure(
-    go.Choroplethmapbox(
-        geojson=geo,
-        locations=None,
-        featureidkey=None,
-        z=None,
-        colorscale="sunsetdark",
-        # zmin=0,
-        # zmax=500000,
-        marker_opacity=0.5,
-        marker_line_width=0,
-    )
-)
-fig.update_layout(
-    mapbox_style="carto-positron",
-    mapbox_zoom=6,
-    mapbox_center={"lat": 28.39, "lon": 84.13},
-    width=800,
-    height=600,
-)
-fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
-st.plotly_chart(fig)
-#fig.write_image("fig1.png")
