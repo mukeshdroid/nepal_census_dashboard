@@ -218,3 +218,4 @@ with col[2]:
             - :orange[**States Migration**]: percentage of states with annual inbound/ outbound migration > 50,000
             ''')
 
+df_selected_year
