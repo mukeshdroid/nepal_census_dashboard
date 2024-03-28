@@ -20,6 +20,7 @@ alt.themes.enable("dark")
 
 # dataframe
 df_nepal = pd.read_csv("data/smallcase_district_random.csv")
+df_districtinfo = pd.read_csv
 
 with st.sidebar:
 
