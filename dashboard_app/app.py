@@ -27,7 +27,8 @@ df_geometry = gpd.read_file("data/nepal-districts_filtered.geojson")
 def make_choropleth(input_df, input_id, input_column, input_color_theme):
     choropleth = px.choropleth(
         input_df,
-        geojson=df_geometry,
+        # geojson=gen_geoJSON('country'),
+        geojson=gen_geoJSON('district'),
         featureidkey="properties.DIST_EN",
         locations=input_id,
         color=input_column,
@@ -80,6 +81,18 @@ def genpiechart_province(df):
         fig.update_layout(margin=dict(l=20, r=20, t=30, b=0),)
         return fig
 
+#generate geoJSON File based on the input
+def gen_geoJSON(level):
+    if level == 'country':
+        return df_geometry
+    
+    if level == 'province':
+        select_province_index = province_list.index(select_province) + 1
+        return df_geometry[df_geometry['ADM1_EN'] == str(select_province_index)]
+    
+    if level == 'district':
+        return df_geometry[df_geometry['DIST_EN'] == select_district]
+
 
 
 #------------------------------------LAYOUT---------------------------------------------
@@ -124,10 +137,23 @@ with st.sidebar:
 choropleth = make_choropleth(df_nepal, "Name", "PopulationCensus2021-11-25", "Reds")
 st.plotly_chart(choropleth, use_container_width=True)
         
+col1_1, col1_2 = st.columns(2)
+
+with col1_1:
+    st.line_chart(genlinechart_province(df_province))
 
 
-st.table(compute_top5population(df_nepal))
-st.table(compute_low5population(df_nepal))
+with col1_2:
+    st.plotly_chart(genpiechart_province(df_province), use_container_width=True)
 
-st.line_chart(genlinechart_province(df_province))
-st.plotly_chart(genpiechart_province(df_province), use_container_width=True)
+
+col2_1, col2_2, col2_3 = st.columns(3)
+
+with col2_1:
+    st.table(compute_top5population(df_nepal))
+
+with col2_2:
+    st.table(compute_low5population(df_nepal))
+
+with col2_3:
+    st.table(compute_top5population(df_nepal))
