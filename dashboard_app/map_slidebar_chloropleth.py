@@ -87,7 +87,7 @@ col1, col2 = st.columns([0.7,0.3])
 
 with col1:
     #choropleth = make_choropleth(df_nepal, "DM", "number", "Reds")
-    choropleth = make_choropleth(df_nepal, "Name", "normalized_population_2021", "Reds")
+    choropleth = make_choropleth(df_nepal, "Name", "PopulationCensus2021-11-25", "Reds")
     st.plotly_chart(choropleth, use_container_width=True)
         
 df_nepal
