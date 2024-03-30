@@ -6,7 +6,7 @@ import plotly.express as px
 import geopandas as gpd
 
 #
-df_geometry = gpd.read_file("data/nepal-districts.geojson")
+df_geometry = gpd.read_file("data/nepal-districts_filtered.geojson")
 
 # configure page
 st.set_page_config(
@@ -19,8 +19,7 @@ st.set_page_config(
 alt.themes.enable("dark")
 
 # dataframe
-df_nepal = pd.read_csv("data/smallcase_district_random.csv")
-df_districtinfo = pd.read_csv
+df_nepal = pd.read_csv("data/districts_complete_normalized.csv")
 
 with st.sidebar:
 
@@ -71,7 +70,7 @@ def make_choropleth(input_df, input_id, input_column, input_color_theme):
         locations=input_id,
         color=input_column,
         color_continuous_scale=input_color_theme,
-        range_color=(0, max(df_nepal.number)),
+        # range_color=(0, max(df_nepal.number)),
         labels={"population": "Population"},
     )
     choropleth.update_layout(
@@ -84,5 +83,11 @@ def make_choropleth(input_df, input_id, input_column, input_color_theme):
     return choropleth.update_geos(fitbounds="locations", visible=True)
 
 
-choropleth = make_choropleth(df_nepal, "DM", "number", "Reds")
-st.plotly_chart(choropleth, use_container_width=True)
+col1, col2 = st.columns([0.7,0.3])
+
+with col1:
+    #choropleth = make_choropleth(df_nepal, "DM", "number", "Reds")
+    choropleth = make_choropleth(df_nepal, "Name", "normalized_population_2021", "Reds")
+    st.plotly_chart(choropleth, use_container_width=True)
+        
+df_nepal
