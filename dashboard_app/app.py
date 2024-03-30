@@ -69,7 +69,7 @@ def genlinechart_province(df):
     df_temp = df_temp.rename(columns={"Population1981" : 1981,"Population1991" : 1991,"Population2001" : 2001,"Population2011" : 2011,"Population2021":2021})
     return df_temp.set_index('Name').T
 
-#generate pie chart to show contribution of population by province
+#generate pie chart to show contribution of population by selected level of detail
 def genpiechart_province(df):
         fig = px.pie(df, values='Population2021', names='Name',
                  title=f'number of ',
@@ -155,26 +155,54 @@ with st.sidebar:
 
 
 
-choropleth = make_choropleth(df_nepal, "Name", info_on, "Reds")
-st.plotly_chart(choropleth, use_container_width=True)
-        
-col1_1, col1_2 = st.columns(2)
+if level=='country':
+    choropleth = make_choropleth(df_nepal, "Name", info_on, "Reds")
+    st.plotly_chart(choropleth, use_container_width=True)
+            
+    col1_1, col1_2 = st.columns(2)
 
-with col1_1:
-    st.line_chart(genlinechart_province(df_province))
-
-
-with col1_2:
-    st.plotly_chart(genpiechart_province(df_province), use_container_width=True)
+    with col1_1:
+        st.line_chart(genlinechart_province(df_province))
 
 
-col2_1, col2_2, col2_3 = st.columns(3)
+    with col1_2:
+        st.plotly_chart(genpiechart_province(df_province), use_container_width=True)
 
-with col2_1:
-    st.table(compute_top5population(df_nepal))
 
-with col2_2:
-    st.table(compute_low5population(df_nepal))
+    col2_1, col2_2, col2_3 = st.columns(3)
 
-with col2_3:
-    st.table(compute_top5population(df_nepal))
+    with col2_1:
+        st.table(compute_top5population(df_nepal))
+
+    with col2_2:
+        st.table(compute_low5population(df_nepal))
+
+    with col2_3:
+        st.table(compute_top5population(df_nepal))
+
+if level=='province':
+    choropleth = make_choropleth(df_nepal, "Name", info_on, "Reds")
+    st.plotly_chart(choropleth, use_container_width=True)
+
+    col1_1, col1_2, col1_3 = st.columns([0.6,0.2,0.2])
+
+    with col1_1:
+        st.plotly_chart(genpiechart_province(genData()), use_container_width=True)
+
+
+
+    with col1_2:
+        st.table(compute_low5population(df_nepal))
+
+    with col1_3:
+        st.table(compute_top5population(df_nepal))
+
+
+st.line_chart(genlinechart_province(genData()))
+
+
+
+
+if level=='district':
+    choropleth = make_choropleth(df_nepal, "Name", info_on, "Reds")
+    st.plotly_chart(choropleth, use_container_width=True)
