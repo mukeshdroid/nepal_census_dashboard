@@ -50,23 +50,17 @@ def make_choropleth(input_df, input_id, input_column, input_color_theme):
 
 
 
-# radio buttons for choropleth type
-def choropleth_radio():
-    info_on = st.radio(
-            "Paramter to color map by:",
-            ["Population", "Sex Ratio", "Poverty", "Literacy", "Student-Teacher Ratio","Population Density"],
-        )
-    return info_on
+
 
 
 #top 6 lowest and highest population 2021
 def compute_top5population(df):
-    df_top5population = df.sort_values(['PopulationCensus2021-11-25'],ascending=False).head(6)[["Name","PopulationCensus2021-11-25"]].rename(columns={'PopulationCensus2021-11-25': 'Population'})
+    df_top5population = df.sort_values(['Population2021'],ascending=False).head(6)[["Name","Population2021"]].rename(columns={'Population2021': 'Population'})
     return df_top5population
 
 #top 6 lowest and highest population 2021
 def compute_low5population(df):
-    df_low5population = df.sort_values(['PopulationCensus2021-11-25'],ascending=True).head(6)[["Name","PopulationCensus2021-11-25"]].rename(columns={'PopulationCensus2021-11-25': 'Population'})
+    df_low5population = df.sort_values(['Population2021'],ascending=True).head(6)[["Name","Population2021"]].rename(columns={'Population2021': 'Population'})
     return df_low5population
 
 #generate line chart to show the increase of population by province
@@ -147,7 +141,10 @@ with st.sidebar:
             "Select District", province_district_dict[select_province]
         )
 
-        choropleth_radio()
+        info_on = st.radio(
+            "Paramter to color map by:",
+            ["Population", "Sex Ratio", "Poverty", "Literacy", "Student-Teacher Ratio","Population Density"],
+        )
 
 
         level = st.radio("Level of Detail",["country","province","district"])
@@ -160,7 +157,7 @@ with st.sidebar:
 
 st.table(genData(level=level))
 
-choropleth = make_choropleth(df_nepal, "Name", "PopulationCensus2021-11-25", "Reds")
+choropleth = make_choropleth(df_nepal, "Name", "Population2021", "Reds")
 st.plotly_chart(choropleth, use_container_width=True)
         
 col1_1, col1_2 = st.columns(2)
