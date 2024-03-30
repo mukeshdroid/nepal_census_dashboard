@@ -59,6 +59,9 @@ with st.sidebar:
 
         st.form_submit_button("Show Info")
 
+        #info section
+        st.info('Built by [Priyanka](https://www.google.com) and [Mukesh](https://www.google.com) \n Checkout code at [Github Repo](https://www.google.com)', icon="ℹ️")
+
 # define cholropleth map
 def make_choropleth(input_df, input_id, input_column, input_color_theme):
     choropleth = px.choropleth(
