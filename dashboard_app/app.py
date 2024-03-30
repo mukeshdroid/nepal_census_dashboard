@@ -29,15 +29,14 @@ level = "country"
 # define cholropleth map
 def make_choropleth(input_df, input_id, input_column, input_color_theme):
     choropleth = px.choropleth(
-        input_df,
-        # geojson=gen_geoJSON('country'),
-        geojson=gen_geoJSON(level=level),
+        genData(),
+        geojson=gen_geoJSON(),
         featureidkey="properties.DIST_EN",
         locations=input_id,
         color=input_column,
         color_continuous_scale=input_color_theme,
         # range_color=(0, max(df_nepal.number)),
-        labels={"population": "Population"},
+        labels={info_on: info_on},
     )
     choropleth.update_layout(
         template="plotly_dark",
@@ -79,7 +78,7 @@ def genpiechart_province(df):
         return fig
 
 #generate geoJSON File based on the input
-def gen_geoJSON(level):
+def gen_geoJSON():
     if level == 'country':
         return df_geometry
     
@@ -91,7 +90,7 @@ def gen_geoJSON(level):
         return df_geometry[df_geometry['DIST_EN'] == select_district]
     
 #generate census dataframe based on input
-def genData(level):
+def genData():
     if level == 'country':
         return df_nepal
     
@@ -143,7 +142,7 @@ with st.sidebar:
 
         info_on = st.radio(
             "Paramter to color map by:",
-            ["Population", "Sex Ratio", "Poverty", "Literacy", "Student-Teacher Ratio","Population Density"],
+            ["Population2021","Sex_Ratio","Population_Density","Poverty","Literacy","StudentTeacher_ratio"],
         )
 
 
@@ -155,9 +154,8 @@ with st.sidebar:
         st.info('Built by [Priyanka](https://www.linkedin.com/in/priyanka-panta-8451b4251/) and [Mukesh](https://www.linkedin.com/in/tiwarimukesh12/) \n Checkout code at [Github Repo](https://www.google.com)', icon="ℹ️")
 
 
-st.table(genData(level=level))
 
-choropleth = make_choropleth(df_nepal, "Name", "Population2021", "Reds")
+choropleth = make_choropleth(df_nepal, "Name", info_on, "Reds")
 st.plotly_chart(choropleth, use_container_width=True)
         
 col1_1, col1_2 = st.columns(2)
