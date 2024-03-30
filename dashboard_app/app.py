@@ -21,6 +21,9 @@ df_province = pd.read_csv("data/province_complete.csv")
 #load nepal's geometry divided at district level
 df_geometry = gpd.read_file("data/nepal-districts_filtered.geojson")
 
+#----------------------------GLOBAL VARIABLES--------------------------------
+level = "country"
+
 
 #------------------------------DEFINE FUNCTIONS-------------------------------
 # define cholropleth map
@@ -28,7 +31,7 @@ def make_choropleth(input_df, input_id, input_column, input_color_theme):
     choropleth = px.choropleth(
         input_df,
         # geojson=gen_geoJSON('country'),
-        geojson=gen_geoJSON('district'),
+        geojson=gen_geoJSON(level=level),
         featureidkey="properties.DIST_EN",
         locations=input_id,
         color=input_column,
@@ -92,6 +95,27 @@ def gen_geoJSON(level):
     
     if level == 'district':
         return df_geometry[df_geometry['DIST_EN'] == select_district]
+    
+#generate census dataframe based on input
+def genData(level):
+    if level == 'country':
+        return df_nepal
+    
+    if level == 'province':
+        return df_nepal[df_nepal['Province'] == select_province]
+    
+    if level == 'district':
+        return df_nepal[df_nepal['Name'] == select_district]
+
+    
+
+#generate a list of district for each province
+def get_districtsinprov():
+    province_district_dict = dict()
+    for i in range(1, 8):
+        df_temp = df_geometry[df_geometry["ADM1_EN"].isin([str(i)])]
+        province_district_dict[province_list[i - 1]] = list(df_temp.DIST_EN)
+    return province_district_dict
 
 
 
@@ -102,7 +126,6 @@ with st.sidebar:
     st.title("Filter Data")
 
     # Go over the geojson file and create a dict where the key is province which contains the list of districts it contains
-
     province_list = [
         "Koshi",
         "Madhesh",
@@ -112,10 +135,8 @@ with st.sidebar:
         "Karnali",
         "Sudurpashchim",
     ]
-    province_district_dict = dict()
-    for i in range(1, 8):
-        df_temp = df_geometry[df_geometry["ADM1_EN"].isin([str(i)])]
-        province_district_dict[province_list[i - 1]] = list(df_temp.DIST_EN)
+
+    province_district_dict = get_districtsinprov()
 
     select_province = st.selectbox("Select Province", province_list)
 
@@ -127,12 +148,17 @@ with st.sidebar:
         )
 
         choropleth_radio()
-        st.form_submit_button("Show Info")
+
+
+        level = st.radio("Level of Detail",["country","province","district"])
+
+        st.form_submit_button("Generate Data")
 
         #info section
         st.info('Built by [Priyanka](https://www.linkedin.com/in/priyanka-panta-8451b4251/) and [Mukesh](https://www.linkedin.com/in/tiwarimukesh12/) \n Checkout code at [Github Repo](https://www.google.com)', icon="ℹ️")
 
 
+st.table(genData(level=level))
 
 choropleth = make_choropleth(df_nepal, "Name", "PopulationCensus2021-11-25", "Reds")
 st.plotly_chart(choropleth, use_container_width=True)
