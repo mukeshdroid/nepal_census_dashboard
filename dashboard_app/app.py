@@ -159,12 +159,14 @@ with st.sidebar:
 
 
 if level=='country':
+    st.write('####', info_on,'data of Nepal')
     choropleth = make_choropleth(df_nepal, "Name", info_on, "Reds")
     st.plotly_chart(choropleth, use_container_width=True)
             
     col1_1, col1_2 = st.columns(2)
 
     with col1_1:
+        st.write('Population Growth amongst ', level, 'from 1981 to 2021' )
         st.line_chart(genlinechart_province(df_province))
 
 
@@ -175,13 +177,13 @@ if level=='country':
     col2_1, col2_2, col2_3 = st.columns(3)
 
     with col2_1:
-        st.table(compute_top5population(df_nepal))
+        st.table(compute_top5population(genData()))
 
     with col2_2:
-        st.table(compute_low5population(df_nepal))
+        st.table(compute_low5population(genData()))
 
     with col2_3:
-        st.table(compute_top5population(df_nepal))
+        st.table(compute_top5population(genData()))
 
 if level=='province':
 
@@ -189,7 +191,7 @@ if level=='province':
     choropleth = make_choropleth(df_nepal, "Name", info_on, "Reds")
     st.plotly_chart(choropleth, use_container_width=True)
 
-    col1_1, col1_2, col1_3 = st.columns([0.6,0.2,0.2])
+    col1_1, col1_2, col1_3 = st.columns([0.55,0.225,0.225])
 
     with col1_1:
         st.plotly_chart(genpiechart_province(genData()), use_container_width=True)
@@ -197,12 +199,14 @@ if level=='province':
 
 
     with col1_2:
-        st.table(compute_low5population(df_nepal))
+        st.write('Least Populated')
+        st.table(compute_low5population(genData()))
 
     with col1_3:
-        st.table(compute_top5population(df_nepal))
+        st.write('Most Populated')
+        st.table(compute_top5population(genData()))
 
-
+    st.write('Population Growth amongst ', level, 'from 1981 to 2021' )
     st.line_chart(genlinechart_province(genData()))
 
 
