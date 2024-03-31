@@ -178,7 +178,7 @@ if authenticate_user():
             st.form_submit_button("Generate Data")
 
             #info section
-            st.info('Built by [Priyanka](https://www.linkedin.com/in/priyanka-panta-8451b4251/) and [Mukesh](https://www.linkedin.com/in/tiwarimukesh12/) \n Checkout code at [Github Repo](https://www.google.com)', icon="🖋️")
+            st.info('Built by [Priyanka](https://www.linkedin.com/in/priyanka-panta-8451b4251/) and [Mukesh](https://www.linkedin.com/in/tiwarimukesh12/) \n Checkout code at [Github Repo](https://github.com/mukeshdroid/nepal_census_dashboard)', icon="🖋️")
             
             #source Information
             st.info('Source Details: \n [Code for Nepal](https://github.com/CodeforNepal/data)', icon="ℹ️")
@@ -190,7 +190,7 @@ if authenticate_user():
 
     if level=='country':
         st.write('####', info_on,'data of Nepal')
-        choropleth = make_choropleth(df_nepal, "Name", info_on, "Reds")
+        choropleth = make_choropleth(df_nepal, "Name", info_on, "blues")
         st.plotly_chart(choropleth, use_container_width=True)
                 
         col1_1, col1_2 = st.columns(2)
@@ -204,21 +204,20 @@ if authenticate_user():
             st.plotly_chart(genpiechart_province(df_province), use_container_width=True)
 
 
-        col2_1, col2_2, col2_3 = st.columns(3)
+        col2_1, col2_2 = st.columns(2)
 
         with col2_1:
+            st.write('Most Populated')
             st.table(compute_top5population(genData()))
 
         with col2_2:
-            st.table(compute_low5population(genData()))
-
-        with col2_3:
-            st.table(compute_top5population(genData()))
+           st.write('Least Populated')
+           st.table(compute_low5population(genData()))
 
     if level=='province':
 
         st.write('####', info_on,'data of ' , select_province , ' Province')
-        choropleth = make_choropleth(df_nepal, "Name", info_on, "Reds")
+        choropleth = make_choropleth(df_nepal, "Name", info_on, "darkmint")
         st.plotly_chart(choropleth, use_container_width=True)
 
         col1_1, col1_2, col1_3 = st.columns([0.55,0.225,0.225])
