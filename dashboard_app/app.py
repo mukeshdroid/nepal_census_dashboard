@@ -49,9 +49,6 @@ def make_choropleth(input_df, input_id, input_column, input_color_theme):
 
 
 
-
-
-
 #top 6 lowest and highest population 2021
 def compute_top5population(df):
     df_top5population = df.sort_values(['Population2021'],ascending=False).head(6)[["Name","Population2021"]].rename(columns={'Population2021': 'Population'})
@@ -72,7 +69,7 @@ def genlinechart_province(df):
 #generate pie chart to show contribution of population by selected level of detail
 def genpiechart_province(df):
         fig = px.pie(df, values='Population2021', names='Name',
-                 title=f'number of ',
+                 title=f'Population Division of '+level,
                  height=300, width=200)
         fig.update_layout(margin=dict(l=20, r=20, t=30, b=0),)
         return fig
@@ -151,7 +148,13 @@ with st.sidebar:
         st.form_submit_button("Generate Data")
 
         #info section
-        st.info('Built by [Priyanka](https://www.linkedin.com/in/priyanka-panta-8451b4251/) and [Mukesh](https://www.linkedin.com/in/tiwarimukesh12/) \n Checkout code at [Github Repo](https://www.google.com)', icon="ℹ️")
+        st.info('Built by [Priyanka](https://www.linkedin.com/in/priyanka-panta-8451b4251/) and [Mukesh](https://www.linkedin.com/in/tiwarimukesh12/) \n Checkout code at [Github Repo](https://www.google.com)', icon="🖋️")
+        
+        #source Information
+        st.info('Source Details: \n [Code for Nepal](https://github.com/CodeforNepal/data)', icon="ℹ️")
+
+
+
 
 
 
@@ -181,6 +184,8 @@ if level=='country':
         st.table(compute_top5population(df_nepal))
 
 if level=='province':
+
+    st.write('####', info_on,'data of ' , select_province , ' Province')
     choropleth = make_choropleth(df_nepal, "Name", info_on, "Reds")
     st.plotly_chart(choropleth, use_container_width=True)
 
@@ -198,11 +203,19 @@ if level=='province':
         st.table(compute_top5population(df_nepal))
 
 
-st.line_chart(genlinechart_province(genData()))
+    st.line_chart(genlinechart_province(genData()))
 
 
 
 
 if level=='district':
-    choropleth = make_choropleth(df_nepal, "Name", info_on, "Reds")
-    st.plotly_chart(choropleth, use_container_width=True)
+    col1_1, col1_2 = st.columns([0.6,0.4])
+
+    with col1_1:
+        st.write('####', info_on,' data of ' , select_district)
+        choropleth = make_choropleth(df_nepal, "Name", info_on, "Reds")
+        st.plotly_chart(choropleth, use_container_width=True)
+
+    with col1_2:
+        st.write('### About',select_district)
+        st.table(genData().transpose())
